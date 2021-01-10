@@ -95,7 +95,9 @@ class ModernHopfield:
         return np.exp(x)
 
     def update(self, v) -> np.array:
-        arg = self.patterns * v - np.dot(self.patterns, v)
+        d = len(v)
+        m = self.patterns * v
+        arg = np.einsum("ij,jk->ik", m, (np.ones((d, d)) - np.diag(np.ones(d))))
         pos = arg + self.patterns
         neg = arg - self.patterns
         return np.sign(
